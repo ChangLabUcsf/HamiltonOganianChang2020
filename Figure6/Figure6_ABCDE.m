@@ -30,7 +30,7 @@ for sb=1:4
     all_corrs{sb} = [];
 end
 for s=1:length(subjects)    
-    fname = sprintf('%s/spect_zscore/%s_STRF_0to600ms_100Hz_allchans_zscore_intercept_noedge_samealpha_consolidatedcode.hf5',strf_dir, subjects{s}) %samealpha
+    fname = sprintf('%s/spect_zscore/%s_STRF_spect_zscore.hf5',strf_dir, subjects{s}) %samealpha
     wts = h5read(fname,'/wts');
     vcorrs = h5read(fname,'/vcorrs');
     
@@ -97,8 +97,8 @@ fkeys = {fkeys{fkeys_order}};
 
 cmap  = cbrewer('qual','Dark2',9);
 
-feat_set1 = 'allchansonset';
-feat_set2 = 'allchans_zscore';
+feat_set1 = 'onset';
+feat_set2 = 'spect_zscore';
 
 all_corrs1 = {};
 all_corrs2 = {};
@@ -108,10 +108,10 @@ for sb=1:4
 end
 for s=1:length(subjects)
 
-    fname1 = sprintf('%s/onset/%s_STRF_0to600ms_100Hz_%s_intercept_noedge_samealpha_consolidatedcode.hf5',strf_dir, subjects{s}, feat_set1) %samealpha
+    fname1 = sprintf('%s/onset/%s_STRF_%s.hf5',strf_dir, subjects{s}, feat_set1) %samealpha
     vcorrs1=h5read(fname1,'/vcorrs');
     
-    fname2 = sprintf('%s/spect_zscore/%s_STRF_0to600ms_100Hz_%s_intercept_noedge_samealpha_consolidatedcode.hf5',strf_dir, subjects{s}, feat_set2) %samealpha
+    fname2 = sprintf('%s/spect_zscore/%s_STRF_%s.hf5',strf_dir, subjects{s}, feat_set2) %samealpha
     vcorrs2=h5read(fname2,'/vcorrs');
     
     for sb=1:4
@@ -156,21 +156,21 @@ rel_abs_both = zeros(4,3);
 
 for s=1:length(subjects)
     %try
-    fname11 = sprintf('%s/%s/%s_STRF_0to600ms_100Hz_allchans%s_intercept_noedge_samealpha_consolidatedcode.hf5',strf_dir, feat_set_pairs{1}{1},subjects{s}, feat_set_pairs{1}{1}); %samealpha
+    fname11 = sprintf('%s/%s/%s_STRF_%s.hf5',strf_dir, feat_set_pairs{1}{1},subjects{s}, feat_set_pairs{1}{1}); %samealpha
     vcorrs11=h5read(fname11,'/vcorrs');
-    fname12 = sprintf('%s/%s/%s_STRF_0to600ms_100Hz_allchans%s_intercept_noedge_samealpha_consolidatedcode.hf5',strf_dir, feat_set_pairs{1}{2}, subjects{s}, feat_set_pairs{1}{2}); %samealpha
+    fname12 = sprintf('%s/%s/%s_STRF_%s.hf5',strf_dir, feat_set_pairs{1}{2}, subjects{s}, feat_set_pairs{1}{2}); %samealpha
     vcorrs12=h5read(fname12,'/vcorrs');
     vcorrs1 = vcorrs11.^2 - vcorrs12.^2;
     
-    fname22 = sprintf('%s/%s/%s_STRF_0to600ms_100Hz_allchans%s_intercept_noedge_samealpha_consolidatedcode.hf5',strf_dir, feat_set_pairs{2}{2}, subjects{s}, feat_set_pairs{2}{2}); %samealpha
+    fname22 = sprintf('%s/%s/%s_STRF_%s.hf5',strf_dir, feat_set_pairs{2}{2}, subjects{s}, feat_set_pairs{2}{2}); %samealpha
     vcorrs22=h5read(fname22,'/vcorrs');
     vcorrs2 = vcorrs11.^2 - vcorrs22.^2;
     
     % Get permuted values
     permabs_dir = sprintf('%s/phnfeaturesonset_relative_log_f0_delta_relative_log_f0_permabs_f0_peakRate', strf_dir);
     permrel_dir = sprintf('%s/phnfeaturesonset_permrelative_log_f0_delta_relative_log_f0_abs_f0_peakRate', strf_dir);
-    fnameperm_abs = sprintf('%s/%s_STRF_0to600ms_100Hz_allchansonset_phnfeaturesonset_relative_log_f0_delta_relative_log_f0_permabs_f0_peakRate_intercept_noedge_samealpha_consolidatedcode.hf5', permabs_dir, subjects{s});
-    fnameperm_rel = sprintf('%s/%s_STRF_0to600ms_100Hz_allchansonset_phnfeaturesonset_permrelative_log_f0_delta_relative_log_f0_abs_f0_peakRate_intercept_noedge_samealpha_consolidatedcode.hf5', permrel_dir, subjects{s});
+    fnameperm_abs = sprintf('%s/%s_STRF_onset_phnfeaturesonset_relative_log_f0_delta_relative_log_f0_permabs_f0_peakRate.hf5', permabs_dir, subjects{s});
+    fnameperm_rel = sprintf('%s/%s_STRF_onset_phnfeaturesonset_permrelative_log_f0_delta_relative_log_f0_abs_f0_peakRate.hf5', permrel_dir, subjects{s});
     
     perm_abs_corrs = h5read(fnameperm_abs,'/perm_corrs');
     perm_rel_corrs = h5read(fnameperm_rel,'/perm_corrs');
@@ -226,13 +226,13 @@ end
 phnpR_onset_both = zeros(4,2);
 
 for s=1:length(subjects)
-    fname11 = sprintf('%s/%s/%s_STRF_0to600ms_100Hz_allchans%s_intercept_noedge_samealpha_consolidatedcode.hf5',strf_dir, feat_set_pairs{1}{1}, subjects{s}, feat_set_pairs{1}{1}); %samealpha
+    fname11 = sprintf('%s/%s/%s_STRF_%s.hf5',strf_dir, feat_set_pairs{1}{1}, subjects{s}, feat_set_pairs{1}{1}); %samealpha
     vcorrs11=h5read(fname11,'/vcorrs');
-    fname12 = sprintf('%s/%s/%s_STRF_0to600ms_100Hz_allchans%s_intercept_noedge_samealpha_consolidatedcode.hf5',strf_dir, feat_set_pairs{1}{2}, subjects{s}, feat_set_pairs{1}{2}); %samealpha
+    fname12 = sprintf('%s/%s/%s_STRF_%s.hf5',strf_dir, feat_set_pairs{1}{2}, subjects{s}, feat_set_pairs{1}{2}); %samealpha
     vcorrs12=h5read(fname12,'/vcorrs');
     vcorrs1 = vcorrs11.^2 - vcorrs12.^2;
     
-    fname22 = sprintf('%s/%s/%s_STRF_0to600ms_100Hz_allchans%s_intercept_noedge_samealpha_consolidatedcode.hf5',strf_dir, feat_set_pairs{2}{2}, subjects{s}, feat_set_pairs{2}{2}); %samealpha
+    fname22 = sprintf('%s/%s/%s_STRF_%s.hf5',strf_dir, feat_set_pairs{2}{2}, subjects{s}, feat_set_pairs{2}{2}); %samealpha
     vcorrs22=h5read(fname22,'/vcorrs');
     vcorrs2 = vcorrs11.^2 - vcorrs22.^2;
     
@@ -240,9 +240,9 @@ for s=1:length(subjects)
     permpR_dir = sprintf('%s/onset_phnfeaturesonset_permpeakRate', strf_dir);
     permphn_dir = sprintf('%s/onset_permphnfeaturesonset_peakRate', strf_dir);
     permonset_dir = sprintf('%s/permonset_phnfeaturesonset_peakRate', strf_dir);
-    fnameperm_pR = sprintf('%s/%s_STRF_0to600ms_100Hz_allchansonset_phnfeaturesonset_permpeakRate_intercept_noedge_samealpha_consolidatedcode.hf5', permpR_dir, subjects{s});
-    fnameperm_phn = sprintf('%s/%s_STRF_0to600ms_100Hz_allchansonset_permphnfeaturesonset_peakRate_intercept_noedge_samealpha_consolidatedcode.hf5', permphn_dir, subjects{s});
-    fnameperm_onset = sprintf('%s/%s_STRF_0to600ms_100Hz_allchanspermonset_phnfeaturesonset_peakRate_intercept_noedge_samealpha_consolidatedcode.hf5', permonset_dir, subjects{s});
+    fnameperm_pR = sprintf('%s/%s_STRF_onset_phnfeaturesonset_permpeakRate.hf5', permpR_dir, subjects{s});
+    fnameperm_phn = sprintf('%s/%s_STRF_onset_permphnfeaturesonset_peakRate.hf5', permphn_dir, subjects{s});
+    fnameperm_onset = sprintf('%s/%s_STRF_permonset_phnfeaturesonset_peakRate.hf5', permonset_dir, subjects{s});
     
     perm_pR_corrs = h5read(fnameperm_pR,'/perm_corrs');
     perm_phn_corrs = h5read(fnameperm_phn,'/perm_corrs');

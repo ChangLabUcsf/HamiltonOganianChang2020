@@ -7,6 +7,8 @@
 clc;
 clear all;
 addpath(genpath('../util1'));
+heschl_load_data;
+config_paths;
 
 %% load anatomy data
 SID = {'S06', 'S09', 'S08',  'S10', 'S11', 'S12','S13'};
@@ -14,7 +16,7 @@ allHemi={ 'lh', 'lh', 'bil', 'lh', 'lh', 'lh', 'lh'};%'lh',
 nSID = length(SID);
 heschl_load_anatomy;
 %% load list of channels
-xlsfile = '../../data/stim/HG_stim_summary.xlsx';
+xlsfile = sprintf('%s/stim/HG_stim_summary.xlsx', paper_data_dir);
 chanlist = readtable(xlsfile, 'Sheet','quantitative');
 
 chanlist.effect = sign(chanlist.passive_effect+chanlist.repetition_effect);
@@ -158,8 +160,8 @@ for csid = 1:7
             sign(chanlistU.customAna)==ca;
         
     else
-        %c_h = ctmr_gauss_plot(cimg.temporal_rh,[0 0 0],0,'rh');
-        c_h = ctmr_gauss_plot(cimg.cortex_rh,[0 0 0],0,'rh');
+        c_h = ctmr_gauss_plot(cimg.temporal_rh,[0 0 0],0,'rh');
+        %c_h = ctmr_gauss_plot(cimg.cortex_rh,[0 0 0],0,'rh');
         
         inclels = isfinite(chanlistU.tdt_electrode1) & contains(chanlistU.hemisphere, hemifls{2}(1)) & ...
             sign(chanlistU.customAna)==ca;
@@ -191,16 +193,10 @@ end
 axis off;
 cl=legend(effNames);
 
-if ca == 1 
-    sgtitle('Stimulation in auditory cortex ROIs');
-else
-    sgtitle('Channel labels outside ROIs');
-end
 clear pl;
 
 lgpaper = {'hallucination, no effect on repetition', 'no hallucination, repetition interrupted', 'attenuated background sounds'};
 legend(lgpaper);
-sgtitle('');
 
 %% ---- counts
 %% number of different electrodes stimulated

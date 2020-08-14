@@ -247,7 +247,7 @@ figure;
 cla;hold on;
 a=crosstab(chanlistU.all_eff(inclel),chanlistU.simpleAna(inclel));
 cb=bar(a');
-xticks([1, 2]);xticklabels({'temporal plane', 'STG'});
+xticks([1, 2]);xticklabels({'HG/PT', 'STG'});
 
 ylabel('# electrodes');
 ylim([0 17]);
@@ -257,8 +257,9 @@ for i = 1:3
     cb(i).FaceAlpha = .5;
     cb(i).LineWidth=2;
 end
-
-legend(effNames(pleff));
+lgpaper = {'hallucination, no effect on repetition', 'no hallucination, repetition interrupted', 'attenuated background sounds'};
+lgg=legend(lgpaper);
+%legend(effNames(pleff));
 
 %% ------ plot sentence onset ERPs
 

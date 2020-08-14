@@ -1,4 +1,4 @@
-%% set path
+% set path
 %addpath(genpath('../../../ecog_scripts'))
 %[datapath, dpath] = setDatapath;
 config_paths;

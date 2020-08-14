@@ -27,13 +27,14 @@ for cdir = 3:length(strfdirs)
     strffiles = struct2cell(dir(fullfile(strfdatapath, strfdirs{cdir}, '*.hf5')));
     if ~isempty(strffiles)
         strffiles  = strffiles(1,:);
-        strffilenames = strrep(strffiles , 'allchans', 'allchans_');
+        %strffilenames = strrep(strffiles , 'allchans', 'allchans_');
+        strffilenames = strffiles;
         for cf = 1:length(strffiles)
             cname = textscan(strffiles{cf}, '%s', 'Delimiter', '_');
             csid = cname{1}{1};
             if ismember(csid,SID)
-                cpred(1) = strfind(strffilenames{cf}, 'allchans')+9;
-                cpred(2) = strfind(strffilenames{cf}, 'noedge')-2;
+                cpred(1) = strfind(strffilenames{cf}, 'STRF')+5;
+                cpred(2) = strfind(strffilenames{cf}, '.hf5')-1;
                 chf5 = h5info(fullfile(strfdatapath, strfdirs{cdir}, strffiles{cf}));
                 for i = 1:length({chf5.Datasets.Name})
                     strfall((strcmpi(SID, csid)),cdir).(chf5.Datasets(i).Name) = h5read(fullfile(strfdatapath, strfdirs{cdir}, strffiles{cf}),['/' chf5.Datasets(i).Name]);
@@ -70,13 +71,13 @@ strfdatapath = sprintf('%s/STRFs/puretone', paper_data_dir);
 
 strffiles = struct2cell(dir(fullfile(strfdatapath, '*.hf5')));
 strffiles  = strffiles(1,:);
-strffilenames = strrep(strffiles , 'allchans', 'allchans_');
 for cf = 1:length(strffiles)
     cname = textscan(strffiles{cf}, '%s', 'Delimiter', '_');
     csid = cname{1}{1};
+    strffilenames = strffiles;
     if ismember(csid,SID)
-        cpred(1) = strfind(strffilenames{cf}, 'allchans')+9;
-        cpred(2) = strfind(strffilenames{cf}, 'noedge')-2;
+        cpred(1) = strfind(strffilenames{cf}, 'STRF')+5;
+        cpred(2) = strfind(strffilenames{cf}, '.hf5')-1;
         chf5 = h5info(fullfile(strfdatapath,  strffiles{cf}));
         for i = 1:length({chf5.Datasets.Name})
             strfTone((strcmpi(SID, csid)),1).(chf5.Datasets(i).Name) = h5read(fullfile(strfdatapath,  strffiles{cf}),['/' chf5.Datasets(i).Name]);
@@ -101,15 +102,16 @@ strfdirs = dir(fullfile(strfdatapath,'*perm*'));
 strfdirs = {strfdirs([strfdirs.isdir]==1).name};
 for cdir = 1:length(strfdirs)
     strffiles = struct2cell(dir(fullfile(strfdatapath, strfdirs{cdir}, '*.hf5')));
+
     if ~isempty(strffiles)
         strffiles  = strffiles(1,:);
-        strffilenames = strrep(strffiles , 'allchans', 'allchans_');
+        strffilenames = strffiles;
         for cf = 1:length(strffiles)
             cname = textscan(strffiles{cf}, '%s', 'Delimiter', '_');
             csid = cname{1}{1};
             if ismember(csid,SID)
-            cpred(1) = strfind(strffilenames{cf}, 'allchans')+9;
-            cpred(2) = strfind(strffilenames{cf}, 'noedge')-2;
+                cpred(1) = strfind(strffilenames{cf}, 'STRF')+5;
+                cpred(2) = strfind(strffilenames{cf}, '.hf5')-1;
 %             try
 %                 chf5 = h5info(fullfile(strfdatapath, strfdirs{cdir}, strffiles{cf}), 'TextEncoding', 'UTF-8');
                 strfperm((strcmpi(SID, csid)),cdir).perm_corrs = h5read(fullfile(strfdatapath, strfdirs{cdir}, strffiles{cf}),'/perm_corrs');
@@ -215,11 +217,11 @@ origr = allr.vcorrs(:,strcmpi(allr.strfnames, 'onset_phnfeaturesonset_relative_l
 allr.pitch.relRu =origr.^2 -  allr.vcorrs(:,strcmpi(allr.strfnames, 'onset_phnfeaturesonset_abs_f0_peakRate')).^2;
 allr.pitch.absRu = origr.^2 - allr.vcorrs(:,strcmpi(allr.strfnames, 'onset_phnfeaturesonset_relative_log_f0_delta_relative_log_f0_peakRate')).^2;
 
-permrelr = [strfperm(:,strcmpi({strfperm(1,:).name}, 'onset_phnfeaturesonset_permrelative_log_f0_delta_relative_log_f0_abs_f0_peakRate_intercept')).perm_corrs]';
+permrelr = [strfperm(:,strcmpi({strfperm(1,:).name}, 'onset_phnfeaturesonset_permrelative_log_f0_delta_relative_log_f0_abs_f0_peakRate')).perm_corrs]';
 nperm = size(permrelr,2);
 allr.pitch.relpval = 1-sum(origr>permrelr,2)/nperm;
 
-permabsr = [strfperm(:,strcmpi({strfperm(1,:).name}, 'onset_phnfeaturesonset_relative_log_f0_delta_relative_log_f0_permabs_f0_peakRate_intercept')).perm_corrs]';
+permabsr = [strfperm(:,strcmpi({strfperm(1,:).name}, 'onset_phnfeaturesonset_relative_log_f0_delta_relative_log_f0_permabs_f0_peakRate')).perm_corrs]';
 nperm = size(permrelr,2);
 allr.pitch.abspval = 1-sum(origr>permabsr,2)/nperm;
 
@@ -229,16 +231,16 @@ origr = allr.vcorrs(:,strcmpi(allr.strfnames, 'onset_phnfeaturesonset_peakRate')
 allr.feat.peakRu =origr.^2 -  allr.vcorrs(:,strcmpi(allr.strfnames, 'onset_phnfeaturesonset')).^2;
 allr.feat.featu = origr.^2 - allr.vcorrs(:,strcmpi(allr.strfnames, 'onset_peakRate')).^2;
 
-permr = [strfperm(:,strcmpi({strfperm(1,:).name}, 'onset_phnfeaturesonset_permpeakRate_intercept')).perm_corrs]';
+permr = [strfperm(:,strcmpi({strfperm(1,:).name}, 'onset_phnfeaturesonset_permpeakRate')).perm_corrs]';
 nperm = size(permr,2);
 allr.feat.peakRpval = 1-sum(origr>permr,2)/nperm;
 
-permr2 = [strfperm(:,strcmpi({strfperm(1,:).name}, 'onset_permphnfeaturesonset_peakRate_intercept')).perm_corrs]';
+permr2 = [strfperm(:,strcmpi({strfperm(1,:).name}, 'onset_permphnfeaturesonset_peakRate')).perm_corrs]';
 nperm = size(permr2,2);
 allr.feat.featpval = 1-sum(origr>permr2,2)/nperm;
 
 
-permr3 = [strfperm(:,strcmpi({strfperm(1,:).name}, 'permonset_phnfeaturesonset_peakRate_intercept')).perm_corrs]';
+permr3 = [strfperm(:,strcmpi({strfperm(1,:).name}, 'permonset_phnfeaturesonset_peakRate')).perm_corrs]';
 nperm = size(permr2,2);
 allr.feat.onsetpval = 1-sum(origr>permr2,2)/nperm;
 

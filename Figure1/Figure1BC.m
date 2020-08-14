@@ -36,6 +36,6 @@ hold on
 gscatter(zeros(5,1),nan(5,1),includeAreasName', areaCols,'.',20);
 % legend(['','',includeAreasName])
 % cb=area_colorbar(areaCols,includeAreasName);
-sgtitle('size ~ maximal receptive field model R^2 (min: .02, max: .5)')
+suptitle('size ~ maximal receptive field model R^2 (min: .02, max: .5)')
 
 %print(fullfile(figDir,'fig1E_brainExEl.jpg'), '-djpeg', '-painters', '-r800')

@@ -36,7 +36,7 @@ Figure4_and_S4
 Figure5;
 
 %%
-Figure6_ABCDE;
+Figure6ABCDE;
 Figure6FG;
 
 %%

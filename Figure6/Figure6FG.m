@@ -163,7 +163,7 @@ group = allbetacluster2;%
 anovan(allbetas2(ismember(allbetacluster2, [1 4]))', {group(ismember(allbetacluster2, [1 4]))});
 
 for i = 1:4
-    [h(i), p(i),~,stats(i)]=...
+    [h1(i), p(i),~,stats(i)]=...
         ttest(allbetas2(allbetacluster2 == i),0);
 end
 

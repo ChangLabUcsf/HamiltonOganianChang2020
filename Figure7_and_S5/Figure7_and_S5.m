@@ -200,7 +200,7 @@ legend(lgpaper);
 
 %% ---- counts
 %% number of different electrodes stimulated
-uSites = (unique(chanlist(:,[1 3 4,12]),'rows'));
+uSites = (unique(chanlist(:,[1 3 4,16]),'rows'));
 crosstab(uSites.customAna, uSites.patient)
 sum(uSites.customAna>0)
 crosstab(uSites.customAna)
@@ -209,7 +209,7 @@ crosstab(chanlist.effect, chanlist.customAna)
 %% channels with evoked sound percept
 
 cel = find(chanlist.passive_effect==1 & chanlist.customAna>0);
-height(unique(chanlist(cel,[1 3 4,12]),'rows'))
+height(unique(chanlist(cel,[1 3 4,16]),'rows'))
 crosstab(chanlist.customAna(cel),sign(chanlist.repetition_effect(cel)))
 
 crosstab(chanlist.patient(cel))

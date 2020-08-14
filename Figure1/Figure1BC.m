@@ -1,3 +1,9 @@
+%Figure 1BC
+%
+% Hamilton, Oganian, and Chang
+% 
+% Electrode counts from each area and electrodes on MNI brain
+
 %% load data
 addpath(genpath('../util1'));
 heschl_load_data;

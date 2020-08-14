@@ -15,7 +15,7 @@ load(sprintf('%s/pure_tone/%s_RF.mat', paper_data_dir, subj),'all_RFs');
 
 elecs = [268 267 266 265 53:56];
 
-strf_file = sprintf('%s/STRFs/spect_zscore/S03_STRF_0to600ms_100Hz_allchans_zscore_intercept_noedge_samealpha_consolidatedcode.hf5', paper_data_dir);
+strf_file = sprintf('%s/STRFs/spect_zscore/S03_STRF_spect_zscore.hf5', paper_data_dir);
 
 % Plot receptive fields (pure tone)
 figure;

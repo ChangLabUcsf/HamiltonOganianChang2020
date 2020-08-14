@@ -41,7 +41,6 @@ colormap(flipud(cbrewer('div','PRGn',256)));
 
 % Plot speech STRFs
 figure;
-suptitle('Speech STRF');
 wts = h5read(strf_file,'/wts');
 for e=1:length(elecs)
     subplot(2,4,e);
@@ -60,6 +59,7 @@ for e=1:length(elecs)
     end
     axis xy;
 end
+suptitle('Speech STRF');
 colormap(flipud(cbrewer('div','PRGn',256)));
 
 %%

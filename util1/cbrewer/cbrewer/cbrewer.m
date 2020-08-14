@@ -16,7 +16,7 @@ function [colormap]=cbrewer(ctype, cname, ncol, interp_method)
 %   - cname: name of colortable. It changes depending on ctype.
 %   - ncol:  number of color in the table. It changes according to ctype and
 %            cname
-%   - interp_method: interpolation method (see interp1.m). Default is "cubic" )
+%   - interp_method: interpolation method (see interp1.m). Default is "pchip" )
 % 
 % A note on the number of colors: Based on the original data, there is
 % only a certain number of colors available for each type and name of
@@ -48,7 +48,7 @@ load('colorbrewer.mat')
 % initialise the colormap is there are any problems
 colormap=[];
 if (~exist('interp_method', 'var'))
-    interp_method='cubic';
+    interp_method='pchip';
 end
 
 % If no arguments
@@ -60,7 +60,7 @@ if (~exist('ctype', 'var') | ~exist('cname', 'var') | ~exist('ncol', 'var'))
     disp('  - ctype: type of color table *seq* (sequential), *div* (divergent), *qual* (qualitative)')
     disp('  - cname: name of colortable. It changes depending on ctype.')
     disp('  - ncol:  number of color in the table. It changes according to ctype and cname')
-    disp('  - interp_method:  interpolation method  (see interp1.m). Default is "cubic" )')
+    disp('  - interp_method:  interpolation method  (see interp1.m). Default is "pchip" )')
     
     disp(' ')
     disp('Sequential tables:')

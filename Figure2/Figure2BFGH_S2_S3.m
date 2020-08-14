@@ -63,7 +63,7 @@ for s=1:length(pt_subjs)
     subj = pt_subjs{s};
     fprintf(1,'Getting RF data for %s\n',subj)
     
-    strf_file = sprintf('%s/%s_STRF_0to600ms_100Hz_allchans_zscore_intercept_noedge_samealpha_consolidatedcode.hf5', strf_dir, subj);
+    strf_file = sprintf('%s/%s_STRF_spect_zscore.hf5', strf_dir, subj);
     vcorrs = h5read(strf_file, '/vcorrs');
     wts = h5read(strf_file, '/wts');
     

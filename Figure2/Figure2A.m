@@ -7,11 +7,12 @@ if 0
     addpath(genpath('../util1'));
     heschl_load_data;
 end
+config_paths;
 
 %% Show the whole brain (small inset)
 subj = 'S03';
-load('/Users/liberty/Dropbox/Heschls_STRFs/data/anatomy/S03/Meshes/S03_lh_temporal_pial.mat');
-load('/Users/liberty/Dropbox/Heschls_STRFs/data/anatomy/S03/Meshes/S03_lh_pial.mat');
+load(sprintf('%s/anatomy/S03/Meshes/S03_lh_temporal_pial.mat',paper_data_dir));
+load(sprintf('%s/anatomy/S03/Meshes/S03_lh_pial.mat',paper_data_dir));
 
 figure; 
 c_h = ctmr_gauss_plot(temporal, [0 0 0], 0, 'lh'); alpha 1;

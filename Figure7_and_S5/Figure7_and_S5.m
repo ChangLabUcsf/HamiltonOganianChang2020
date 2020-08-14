@@ -263,8 +263,7 @@ legend(effNames(pleff));
 %% ------ plot sentence onset ERPs
 
 %% load out structures
-%outdir = '/Users/yuliao/Dropbox (UCSF Department of Neurological Surgery)/proj_Heschls/Heschls_STRFs/out_structures';
-outdir = '/Users/liberty/Dropbox/Heschls_STRFs/data/TIMIT';
+outdir = sprintf('%s/TIMIT',paper_data_dir);
 for cs =1:length(SID)
     try
         coutfile = dir(fullfile(outdir, [SID{cs} '*.mat']));

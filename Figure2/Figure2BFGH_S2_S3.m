@@ -9,9 +9,10 @@ if 0
     heschl_load_data;
 end
 %heschl_load_anatomy;
-strf_dir = '/Users/liberty/Dropbox/Heschls_STRFs/data/STRFs/spect_zscore';
+config_paths;
+strf_dir = sprintf('%s/STRFs/spect_zscore', paper_data_dir);
 
-pure_tones_dir = '/Users/liberty/Dropbox/Heschls_STRFs/data/pure_tone';
+pure_tones_dir = sprintf('%s/pure_tone', paper_data_dir);
 pt_subjs = {'S03', 'S04', 'S07', 'S08', 'S09'};
 
 auditory_anat = {'transversetemporal','planumpolare','planumtemporale','ctx_lh_G_temp_sup-Plan_polar',...

@@ -1,5 +1,6 @@
 %% load imaging data
-imgpath = '/Users/liberty/Dropbox/Heschls_STRFs/data/anatomy';
+config_paths;
+imgpath = sprintf('%s/anatomy', paper_data_dir);
 [imgmni, mniMesh] = group_load_img(SID, 'mni',imgpath,allHemi);
 imgNative = group_load_img(SID, 'native',imgpath,allHemi);
 %% load heschls mesh
@@ -73,7 +74,7 @@ for csid = 1:length(SID)
 end
 
 %% load electrode matrix with fixed STG division in native space
-fixed_ana_path = '/Users/liberty/Dropbox/Heschls_STRFs/data/anatomy/';
+fixed_ana_path = sprintf('%s/anatomy/', paper_data_dir);
 
 for csid = 1:length(SID)
     cs = SID{csid};

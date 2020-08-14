@@ -7,15 +7,15 @@ if 0
     addpath(genpath('../util1'));
     heschl_load_data;
 end
+config_paths;
 
 subj = 'S03';
 
-strf_dir = '/Users/liberty/Documents/UCSF/Heschls/data/strfs';
-load(sprintf('/Users/liberty/Dropbox/Heschls_STRFs/data/pure_tone/%s_RF.mat', subj),'all_RFs');
+load(sprintf('%s/pure_tone/%s_RF.mat', paper_data_dir, subj),'all_RFs');
 
 elecs = [268 267 266 265 53:56];
 
-strf_file = '/Users/liberty/Dropbox/Heschls_STRFs/data/STRFs/spect_zscore/S03_STRF_0to600ms_100Hz_allchans_zscore_intercept_noedge_samealpha_consolidatedcode.hf5';
+strf_file = sprintf('%s/STRFs/spect_zscore/S03_STRF_0to600ms_100Hz_allchans_zscore_intercept_noedge_samealpha_consolidatedcode.hf5', paper_data_dir);
 
 % Plot receptive fields (pure tone)
 figure;

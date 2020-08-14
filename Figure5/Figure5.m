@@ -8,11 +8,12 @@ if 0
     addpath('../util1');
     heschl_load_data;
 end
+config_paths;
 
 %%
 % Load the NMF data
-load('/Users/liberty/Dropbox/Heschls_STRFs/data/NMF/allsubj_clustdata_avgtrial.mat');
-load('/Users/liberty/Dropbox/Heschls_STRFs/data/NMF/allsubj_NMF_avgtrial.mat');
+load(sprintf('%s/NMF/allsubj_clustdata_avgtrial.mat',paper_data_dir));
+load(sprintf('%s/NMF/allsubj_NMF_avgtrial.mat',paper_data_dir));
 
 %%
 bandnum=4; % This corresponds to 4 clusters
@@ -83,7 +84,6 @@ axis([1 16 0.84 0.96]);
 
 %%
 temporal=mniMesh.temporal.lh;
-%load('~/Dropbox/Heschls_STRFs/data/anatomy/cvs_avg35_inMNI152/Meshes/cvs_avg35_inMNI152_lh_temporal_pial.mat');
 figure(2);
 c_h = [];
 g = struct(); % Always use the same camera angle so

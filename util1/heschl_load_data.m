@@ -1,6 +1,8 @@
 %% set path
 %addpath(genpath('../../../ecog_scripts'))
 %[datapath, dpath] = setDatapath;
+config_paths;
+
 %% patient list
 
 SID = {'S01', 'S02', 'S03', 'S04','S05', 'S06', 'S07', 'S08', 'S09'};
@@ -14,8 +16,7 @@ plot_definitions;
 %% load imaging data
 heschl_load_anatomy;
 %% load strfs
-%strfdatapath = '/Users/liberty/Dropbox/Heschls_STRFs/pearsonR_STRFs';
-strfdatapath = '/Users/liberty/Dropbox/Heschls_STRFs/data/STRFs';
+strfdatapath = sprintf('%s/STRFs',paper_data_dir);
 clear strfall;
 strfdirs = dir(fullfile(strfdatapath));
 strfdirs = {strfdirs([strfdirs.isdir]==1).name};
@@ -65,8 +66,7 @@ for i = 1:size(strfall,1)
 end
 %% load pure tone strfs
 
-%strfdatapath = '/Users/yuliao/Dropbox/proj_Heschls/Heschls_STRFs/pearsonR_STRFs/puretone';
-strfdatapath = '/Users/liberty/Dropbox/Heschls_STRFs/data/STRFs/puretone';
+strfdatapath = sprintf('%s/STRFs/puretone', paper_data_dir);
 
 strffiles = struct2cell(dir(fullfile(strfdatapath, '*.hf5')));
 strffiles  = strffiles(1,:);
@@ -96,8 +96,7 @@ for i = 1:size(strfTone,1)
     end
 end
 %% load strf permutations
-%strfdatapath = '/Users/liberty/Dropbox/Heschls_STRFs/pearsonR_STRFs/';
-strfdatapath = '/Users/liberty/Dropbox/Heschls_STRFs/data/STRFs/';
+strfdatapath = sprintf('%s/STRFs/', paper_data_dir);
 strfdirs = dir(fullfile(strfdatapath,'*perm*'));
 strfdirs = {strfdirs([strfdirs.isdir]==1).name};
 for cdir = 1:length(strfdirs)
@@ -126,22 +125,9 @@ for cdir = 1:length(strfdirs)
         end   
     end    
 end
-%% load PSIs
-% strfdatapath = '/Users/yuliao/Dropbox/proj_Heschls/Heschls_STRFs/PSIs';
-% strffiles = struct2cell(dir(fullfile(strfdatapath, '*.mat')));
-% strffiles  = strffiles(1,:);
-% for cf = 1:length(strffiles)
-%     strfdet = textscan(strffiles{cf}, '%s', 'Delimiter', '_');
-%     Psiall(strcmpi(SID, strfdet{1}{1})) = load(fullfile(strfdatapath, strffiles{cf}));    
-% end
-% 
-% for cf = 1:length(strffiles)
-%  strfdet = textscan(strffiles{cf}, '%s', 'Delimiter', '_');
-%  Psiall(strcmpi(SID, strfdet{1}{1})).sid = strfdet{1}{1};
-%  Psiall(strcmpi(SID, strfdet{1}{1})).tps = strfdet{1}{3};
-% end
+
 %% load out
-out_dir = '/Users/liberty/Dropbox/Heschls_STRFs/data/TIMIT/'
+out_dir = sprintf('%s/TIMIT/', paper_data_dir);
 for si = 1:length(SID)
     outfiles = dir(fullfile(out_dir,...
         [SID{si} '*mat']));
@@ -151,7 +137,7 @@ end
 %% load feature names
 features = load('Timit_features.mat'); 
 %% load sentence info
-sentdet = load('../data/TIMIT/out_sentence_details_timit_all_loudness.mat');
+sentdet = load(sprintf('%s/TIMIT/out_sentence_details_timit_all_loudness.mat', paper_data_dir));
 
 %% variance of all models combined
 

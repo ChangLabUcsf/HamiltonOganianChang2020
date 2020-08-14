@@ -2,8 +2,9 @@
 % Hamilton, Oganian, and Chang (2020).
 
 % Set the data directories
-nmf_dir = '/Users/liberty/Dropbox/Heschls_STRFs/data/NMF/';
-strf_dir = '/Users/liberty/Dropbox/Heschls_STRFs/data/STRFs/';
+config_paths;
+nmf_dir = sprintf('%s/NMF/',paper_data_dir);
+strf_dir = sprintf('%s/STRFs/',paper_data_dir);
 
 % Load the data for cluster assignments
 load(sprintf('%s/allsubj_clustdata_avgtrial.mat', nmf_dir));

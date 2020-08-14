@@ -3,6 +3,7 @@
 % Download the data
 
 %% load data
+addpath(genpath('util1'));
 config_paths;
 fprintf(1,'****Loading data from %s****\n', paper_data_dir);
 
@@ -10,7 +11,6 @@ if ~exist(paper_data_dir,'dir')
     error(sprintf('ERROR: %s does not exist. Have you downloaded the data and set your data directory by editing config_paths?\n', paper_data_dir));
 end
 
-addpath(genpath('util1'));
 heschl_load_data;
 
 %% 

@@ -3,6 +3,8 @@
 % Download the data
 
 %% load data
+clear all; close all;
+
 addpath(genpath('util1'));
 config_paths;
 fprintf(1,'****Loading data from %s****\n', paper_data_dir);

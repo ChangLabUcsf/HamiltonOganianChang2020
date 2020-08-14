@@ -1,3 +1,8 @@
+% Figure3
+%
+% Hamilton, Oganian, and Chang
+%
+
 %% load data
 addpath(genpath('../util1'));
 heschl_load_data;

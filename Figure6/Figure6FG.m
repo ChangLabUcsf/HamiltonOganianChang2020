@@ -4,6 +4,7 @@
 %
 % Load data and get code dependencies
 
+clear all;
 addpath(genpath('../util1'));
 heschl_load_data;
 

@@ -16,11 +16,11 @@ wrddur=[sentdet.sentdet.wordDur];
 wrdnum = [sentdet.sentdet.wordOnsOff];
 a2 = wrddur(wrddur>0);
 a2num = wrdnum(1,wrddur>0);
-figure
-scatter(a2, a2num+rand(size(a2num))/5);
-xlabel('word length');
-ylabel('word number');
-figure, histogram(a2(a2num==1));
+% figure
+% scatter(a2, a2num+rand(size(a2num))/5);
+% xlabel('word length');
+% ylabel('word number');
+% figure, histogram(a2(a2num==1));
 %% get mean HG for each word
 for csid = 1:length(SID)
     cs = SID{csid};
@@ -109,8 +109,8 @@ for i = 1:length(sentdet.sentdet)
 end
 wdurs(wdurs==0)=nan;
 %% histogram of word durations
-figure,
-histogram(diff(wdurs(1:2,:,:),1,1))
+% figure,
+% histogram(diff(wdurs(1:2,:,:),1,1))
 
 %% mixed model: 
 % hga ~ word number x time since sentence onset
@@ -145,13 +145,13 @@ allbetas2 = cell2mat(modb2);
 allbetacluster2 =[];for i = 1:4, allbetacluster2 =[allbetacluster2 ; i*ones(length(modb2{i}),1)];end
 
 % figure
-subplot(1,2,2)
-boxplot(allbetas2',allbetacluster2);
-horzline(0);
-xticklabels({'1','2','3','4'});
-xlabel('Cluster #');
-ylabel('mean word number beta');
-title('electrode betas: word number ~ mean HGA, words 3-7 only')
+% subplot(1,2,2)
+% boxplot(allbetas2',allbetacluster2);
+% horzline(0);
+% xticklabels({'1','2','3','4'});
+% xlabel('Cluster #');
+% ylabel('mean word number beta');
+% title('electrode betas: word number ~ mean HGA, words 3-7 only')
 % 1-way anova on betas
 [p,tbl] = anovan(allbetas2', allbetacluster2);
 
@@ -166,19 +166,4 @@ for i = 1:4
     [h1(i), p(i),~,stats(i)]=...
         ttest(allbetas2(allbetacluster2 == i),0);
 end
-
-
-
-%% --- more stuff
-%% plot single electrodes in each cluster
-figure,
-for ccl = 1:4
-    subplot(1,4,ccl)
-    plot(nanmean(wrdResp{ccl}, 3)')
-    xlim([1 10])
-    xlabel('Word #')
-    ylabel('Average high gamma')
-    title(['cluster ' num2str(ccl)]);
-end
-
 

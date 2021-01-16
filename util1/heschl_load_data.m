@@ -141,19 +141,22 @@ features = load('Timit_features.mat');
 %% load sentence info
 sentdet = load(sprintf('%s/TIMIT/out_sentence_details_timit_all_loudness.mat', paper_data_dir));
 
-%% variance of all models combined
+%% Create allr: variance of all models and electrodes combined
 
 allr.vcorrs=[];allr.vcorrs=[];allr.elecmatrix =[];allr.sid=[];
 allr.elnum=[];allr.customAna=[];allr.strf=cell(1,size(strfall, 2)); allr.psi=[];
 allr.tone_vcorrs=[];
 allr.meansentresp=[];
 allr.newCustomAna=[];
+allr.CustomAna7area=[]; % cell revision
 meanHGA = cell(length(SID),1);
 for i =1:length(SID)
     nel = length(strfall(i,1).vcorrs);
     allr.vcorrs = [allr.vcorrs;[strfall(i,:).vcorrs]];%./max(max([strfall(i,:).vcorrs],[],2),[],1)];
     allr.customAna =[allr.customAna;imgNative.(SID{i}).customAna(1:nel)];
     allr.newCustomAna = [allr.newCustomAna; imgNative.(SID{i}).newCustomAna(1:nel)];
+    
+    allr.CustomAna7area = [allr.CustomAna7area; imgNative.(SID{i}).CustomAna7areas(1:nel)]; % cell revision
     
     allr.elecmatrix = [allr.elecmatrix; imgmni.(SID{i}).elecmatrix(1:nel,:)];
     
@@ -307,3 +310,13 @@ allr.elGroupName = {'onset', 'feat+peakR', 'relP', 'absP', 'realP+absP', 'feat',
 
 elGroup = allr.elGroup;
 elGroupName = allr.elGroupName;
+
+
+%% count of electrodes
+figure, 
+elcounts = crosstab(allr.CustomAna7area(allr.CustomAna7area>0 & allr.maxr.^2>minr2));
+bar(elcounts);
+set(gca, 'XTickLabel',new7AreaNames)
+set(gca, 'XTickLabelRotation', 45)
+hold on
+text(1:7, 10*ones(1,7), num2str(elcounts))

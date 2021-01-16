@@ -108,11 +108,7 @@ end
 
 %% ---- change to 7 areas --- this is part of the Cell revision in Jan 2021
 new7AreaNames = {'PT', 'pmHG', 'alHG', 'PP', 'pSTGonset', 'pSTGno-ons', 'mSTG'};
-n7Areas = length(new7AreaNames);
-areaCols = [0 0 179; 0 179 0;179 0 179 ;179 0 0;179 179 0]/256;
-hgpm_color = [0.06, 0.69, 0.29];
-hgal_color = [0.06, 0.8, 0.8];
-area7Cols = [areaCols(1,:);hgpm_color; hgal_color; areaCols(3,:); [0 0 0]; areaCols(4,:);areaCols(5,:)];
+
 %% % Separate posteromedial from anterolateral HG
 for csi = 1:length(SID)
     imgNative.(SID{csi}).CustomAna7areas = zeros(size(imgNative.(SID{csi}).newCustomAna));
@@ -129,9 +125,9 @@ imgNative.S03.CustomAna7areas([258 259 260 261]) = 2;
 % imgNative.S04.pmHG = [];
 imgNative.S05.CustomAna7areas([3 4 5])=2;
 imgNative.S06.CustomAna7areas([257 258 265]) = 2;
-% imgNative.S07.pmHG = [];
-imgNative.S08.CustomAna7areas([53 54]) = 2;
-imgNative.S09.CustomAna7areas([265 266 267 268]) = 2;
+% imgNative.EC157.pmHG = [];
+imgNative.S01.CustomAna7areas([53 54]) = 2;
+imgNative.EC193.CustomAna7areas([265 266 267 268]) = 2;
 
 % transversetemporal = {'transversetemporal','ctx_lh_G_temporal_transverse','ctx_rh_G_temporal_transverse',...
 %     'ctx_lh_S_temporal_transverse','ctx_rh_S_temporal_transverse', 'ctx_rh_G_temp_sup-G_T_transv', 'ctx_lh_G_temp_sup-G_T_transv'};
@@ -156,5 +152,4 @@ for i=1:length(SID)
     imgNative.(SID{i}).CustomAna7areas(pSTG_onset_elecs) = 5;
     imgNative.(SID{i}).CustomAna7areas(imgNative.(SID{i}).CustomAna7areas==50) = 6;
 end
-
 

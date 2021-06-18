@@ -281,7 +281,7 @@ ylabel('Normalized max high gamma');
 ylim([-0.1 1]);
 set(gca,'ytick',[0:0.25:1]);
 set(gca,'xtick',[1:14],'xticklabel', anat_labels);
-print_quality_fig(gcf,sprintf('%s/Fig3F.eps',figDir),10, 3, 3, 'inches', 'epsc');
+%print_quality_fig(gcf,sprintf('%s/Fig3F.eps',figDir),10, 3, 3, 'inches', 'epsc');
 
 %%
 % Stats for pure tone magnitudes

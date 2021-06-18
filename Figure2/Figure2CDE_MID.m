@@ -56,6 +56,7 @@ for ch=1:length(mid_data.data)
 end
 
 for e=1:length(elecs)
+    try
     subplot(2,4,e);
     strfmat = reshape(wts(elecs(e),:),[],60);
     imagesc(fliplr(strfmat), [-max(abs(strfmat(:))) max(abs(strfmat(:)))]);
@@ -71,9 +72,13 @@ for e=1:length(elecs)
 
     end
     axis xy;
+    catch
+    end
 end
 suptitle('Speech STRF');
 colormap(flipud(cbrewer('div','PRGn',256)));
+
+print_quality_fig(gcf,sprintf('%s/Figure3D_MID.eps',figDir),8,3,3,'inches','epsc');
 
 %%
 pt_color = [0.17, 0.22, 0.58];

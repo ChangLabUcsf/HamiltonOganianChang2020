@@ -1,12 +1,12 @@
 % AllFigures.m
 %
-% Recreate all figures for Hamilton, Oganian, and Chang (2020). 
+% Recreate all figures for Hamilton, Oganian, Hall, and Chang (2021). 
 % Topography of speech acoustic and phonological feature encoding across the expanse of human auditory cortex
 %
 % You must download the data from OSF prior to running these scripts.
 % See the README.md for more information
 %
-% Liberty Hamilton, Yulia Oganian, Edward Chang. 2020
+% Liberty Hamilton, Yulia Oganian, Jeffery Hall, Edward Chang. 2021
 % The University of San Francisco
 % 
 
@@ -30,18 +30,19 @@ addpath(genpath(pwd));
 Figure1BC;
 
 %%
-Figure2A;
-Figure2CDE;
-Figure2BFGH_S2_S3;
+Figure2ABC;
+Figure2DE;
 
 %%
-Figure3;
+Figure3A;
+Figure3BFGH_S2_S3_7areas_MID;
+Figure3CDE_MID;
 
 %%
-Figure4_and_S4
+Figure4
 
 %%
-Figure5;
+Figure5_and_S6;
 
 %%
 Figure6ABCDE;

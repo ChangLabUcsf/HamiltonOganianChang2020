@@ -4,7 +4,7 @@
 %
 % Magnitude of pure tone response in each area
 
-if 0
+if 1
     addpath(genpath('../util1'));
     heschl_load_data;
 end
@@ -14,26 +14,8 @@ strf_dir = sprintf('%s/STRFs/spect_zscore', paper_data_dir);
 
 pure_tones_dir = sprintf('%s/pure_tone', paper_data_dir);
 pt_subjs = {'S03', 'S04', 'S07', 'S08', 'S09'};
-
-auditory_anat = {'transversetemporal','planumpolare','planumtemporale','ctx_lh_G_temp_sup-Plan_polar',...
-    'ctx_rh_G_temp_sup-Plan_polar','ctx_lh_S_temp_sup-Plan_polar','ctx_rh_S_temp_sup-Plan_polar',...
-    'ctx_lh_G_temporal_transverse','ctx_rh_G_temporal_transverse',...
-    'ctx_lh_S_temporal_transverse','ctx_rh_S_temporal_transverse',...
-    'ctx_lh_G_temp_sup-Plan_tempo','ctx_rh_G_temp_sup-Plan_tempo',...
-    'ctx_lh_S_temp_sup-Plan_tempo','ctx_rh_S_temp_sup-Plan_tempo','superiortemporal',...
-    'pSTG','mSTG'};
-planumpolare = {'planumpolare','ctx_lh_G_temp_sup-Plan_polar', 'ctx_rh_G_temp_sup-Plan_polar',...
-    'ctx_lh_S_temp_sup-Plan_polar', 'ctx_rh_S_temp_sup-Plan_polar'};
-planumtemporale = {'planumtemporale','ctx_lh_G_temp_sup-Plan_tempo', 'ctx_rh_G_temp_sup-Plan_tempo',...
-    'ctx_lh_S_temp_sup-Plan_tempo', 'ctx_rh_S_temp_sup-Plan_tempo'};
-transversetemporal = {'transversetemporal','ctx_lh_G_temporal_transverse','ctx_rh_G_temporal_transverse',...
-    'ctx_lh_S_temporal_transverse','ctx_rh_S_temporal_transverse'};
-
-pt_color = [0.17, 0.22, 0.58];
-pp_color = [0.62, 0.22, 0.58];
-mstg_color = [0.69, 0.70, 0.21];
-pstg_color = [0.69, 0.12, 0.14];
-hg_color = [0.06, 0.69, 0.29];
+include7AreasName = {'PT','pmHG','alHG','PP','pSTG onset','pSTG other','mSTG'};
+useAnaName = 'CustomAna7areas';
 
 rf_dat = containers.Map;
 all_pt_magnitudes = [];
@@ -49,7 +31,7 @@ all_vcorrs = [];
 all_rf = [];
 all_rf_struct = struct();
 all_tc_struct = struct();
-for i=1:5
+for i=1:7
     all_rf_struct(i).rf = [];
     all_tc_struct(i).tc = [];
     all_tc_struct(i).tc_speech = [];
@@ -84,13 +66,14 @@ for s=1:length(pt_subjs)
     speech_pretrial_silence = [out.silence];
     speech_posttrial_speech = [out.speech];
     
-    anatomy = imgNative.(subj).newAnatomy(:,4);
+    %anatomy = imgNative.(subj).newAnatomy(:,4);
+    anatomy = imgNative.(subj).(useAnaName);
     elecmatrix = imgNative.(subj).elecmatrix;
     elecmatrix_warped = imgmni.(subj).elecmatrix;
     
     % Remove channels not in the anatomy file
     if strcmp(subj,'S07')
-        anatomy = anatomy(1:378);
+        anatomy = anatomy(1:302);
     elseif strcmp(subj, 'S08')
         anatomy = anatomy(1:160);
     elseif strcmp(subj, 'S09')
@@ -99,44 +82,16 @@ for s=1:length(pt_subjs)
     
     this_rf.all_RFs = this_rf.all_RFs(:,:,1:length(anatomy));
     
-    %tdt_elecs = load(sprintf('/Applications/freesurfer_v5/subjects/%s/elecs/TDT_elecs_all_anatfix.mat',subj));
-    %elecmatrix = tdt_elecs.elecmatrix;
-    %anatomy = tdt_elecs.anatomy(:,4);
-    
     for i = 1:length(anatomy)
-        a = anatomy{i};
-        g = 0;
+        g = anatomy(i);
         if ~all(all(this_rf.all_RFs(:,:,i)==0))
-            if ismember(a, auditory_anat)
-                %fprintf(1,'%s is part of auditory cortex\n', a);
-                if ismember(a,'mSTG')
-                    a = 'mSTG';
-                    a_short = 'mSTG';
-                    g=5;
-                    clr = mstg_color;
-                elseif ismember(a, 'pSTG')
-                    a='pSTG';
-                    a_short='pSTG';
-                    clr = pstg_color;
-                    g=4;
-                elseif ismember(a,transversetemporal)
-                    a = 'transversetemporal';
-                    a_short = 'HG';
-                    clr = hg_color;
-                    g = 2;
-                elseif ismember(a,planumpolare)
-                    a = 'planumpolare';
-                    clr = pp_color;
-                    a_short = 'PP';
-                    g = 3;
-                elseif ismember(a, planumtemporale)
-                    a = 'planumtemporale';
-                    clr = pt_color;
-                    a_short = 'PT';
-                    g = 1;
-                end
-                
-                mag = max(max(this_rf.all_RFs(:,:,i)));
+            if g>0
+                clr = area7Cols(g,:);
+                a = include7AreasName{g};
+                a_short = a;
+                                
+                %mag = max(max(this_rf.all_RFs(:,:,i))); % pre cell rev
+                mag = max(mean(this_rf.all_RFs(:,:,i))); % post cell rev
                 avg_mag_pt = mean(mean(this_rf.all_RFs(:,:,i)));
                 mag_sp = max(resp(i,:));
                 avg_mag_sp = mean(resp(i,:));
@@ -213,13 +168,15 @@ cmap = flipdim(cmap,1);
 
 all_pt_avg(all_pt_avg<0) = 0;
 all_sp_avg(all_sp_avg<0) = 0;
-
 all_pt_avg = all_pt_avg./max(all_pt_avg);
 all_sp_avg = all_sp_avg./max(all_sp_avg);
 
 inds2rm = find(all_elecs(:,1)>0);
 all_sp_avg(inds2rm) = [];
 all_pt_avg(inds2rm) = [];
+allg = all_groups; 
+allg(inds2rm)= [];
+
 all_elecs(inds2rm,:) = [];
 
 x=round(all_sp_avg*255)+1; %red
@@ -245,34 +202,57 @@ xlabel('Pure tone');
 set(gca,'ytick',[1 255],'yticklabel',{'0','max'});
 ylabel('Speech');
 %print_quality_fig(gcf,'purplered_cmap.eps',10,4,4,'inches','epsc');
-
+set(gcf,'color','w');
 
 %%
 % Figure 2F
-anat_labels = {'PT','HG','PP','pSTG','mSTG'};
+% Use CustomAna labels for 7 areas
+%anat_labels = {'PT','HG','PP','pSTG','mSTG'};
+anat_labels = include7AreasName;
+% 
+all_pt_mag = all_pt_magnitudes;
+all_sp_mag = all_sp_magnitudes;
+badinds = union(find(all_sp_magnitudes<=0), find(all_pt_magnitudes<=0));
+all_pt_mag(badinds) = []; all_sp_mag(badinds) = []; all_groups(badinds) = [];
+all_pt_mag = all_pt_mag - min(all_pt_mag);
+all_pt_mag = all_pt_mag/max(all_pt_mag);
+all_sp_mag = all_sp_mag-min(all_sp_mag);
+all_sp_mag = all_sp_mag/max(all_sp_mag);
 
-pt = ones(length(all_pt_magnitudes),1); % pure tone
-sp = 1+ones(length(all_pt_magnitudes),1); % speech
+pt = ones(length(all_pt_mag),1); % pure tone
+sp = 1+ones(length(all_pt_mag),1); % speech
 measure_type = [pt; sp];
 
+repeated_cols = zeros(14,3);
+pp=1;
+for i=1:7
+    repeated_cols(pp,:) = area7Cols(i,:);
+    pp=pp+1;
+    repeated_cols(pp,:) = area7Cols(i,:);
+    pp=pp+1;
+end
+
+%%
 figure;
-boxplot([all_pt_magnitudes; all_sp_magnitudes], [repmat(all_groups,2,1) measure_type], ...
-    'colors', [pt_color; pt_color; hg_color;hg_color; pp_color; pp_color; ...
-    pstg_color; pstg_color; mstg_color; mstg_color],'symbol','');
+
+%boxplot([all_pt_magnitudes./max(all_pt_magnitudes); all_sp_magnitudes./max(all_sp_magnitudes)], [repmat(all_groups,2,1) measure_type], ...
+boxplot([all_pt_mag; all_sp_mag], [measure_type repmat(all_groups,2,1) ], ...
+    'colors', repeated_cols,'symbol','');
 
 h = findobj(gca,'Tag','Box');
-cs = [pt_color; pt_color; hg_color;hg_color; pp_color; pp_color; ...
-    pstg_color; pstg_color; mstg_color; mstg_color];
+
 for j=1:length(h)
-    if mod(j,2)==0
-        patch(get(h(j),'XData'),get(h(j),'YData'),cs(length(h)-(j-1),:),'FaceAlpha',1.00);
+    if j <=7
+        patch(get(h(j),'XData'),get(h(j),'YData'),area7Cols(7-(j-1),:),'FaceAlpha',0.20);
+        set(h(j), 'linewidth',1,'color',area7Cols(7-(j-1),:),'linestyle','-');
     else
-        patch(get(h(j),'XData'),get(h(j),'YData'),cs(length(h)-(j-1),:),'FaceAlpha',.3);
+        patch(get(h(j),'XData'),get(h(j),'YData'),area7Cols(7-(j-8),:),'FaceAlpha',.8);
+        set(h(j), 'linewidth',1,'color',area7Cols(7-(j-8),:),'linestyle','-');
     end
 end
 
 tags = {'Lower Whisker','Upper Whisker','Lower Adjacent Value',...
-    'Upper Adjacent Value','Median','Box'};
+    'Upper Adjacent Value','Median'};
 for tt=1:length(tags)
     
     h = findobj(gca,'Tag',tags{tt});
@@ -280,17 +260,17 @@ for tt=1:length(tags)
         set(h(j), 'linewidth',1,'color','k','linestyle','-');
     end
 end
-ylabel('Max Z-scored high gamma');
+ylabel('Normalized max high gamma');
 
-ylim([-0.1 12]);
-set(gca,'ytick',[0:3:12]);
-set(gca,'xtick',[1.5:2:9.5],'xticklabel', anat_labels);
-%print_quality_fig(gcf,'/Users/liberty/Documents/UCSF/Heschls/data/Fig2F.eps',10, 3, 3, 'inches', 'epsc');
+ylim([-0.1 1]);
+set(gca,'ytick',[0:0.25:1]);
+set(gca,'xtick',[1:14],'xticklabel', anat_labels);
+print_quality_fig(gcf,sprintf('%s/Fig3F.eps',figDir),10, 3, 3, 'inches', 'epsc');
 
 %%
 % Stats for pure tone magnitudes
 fprintf(1,'Pure tone magnitudes\n');
-[P,ANOVATAB,STATS] = kruskalwallis(all_pt_magnitudes, all_groups)
+[P,ANOVATAB,STATS] = kruskalwallis(all_pt_mag, all_groups)
 [c,m,h,nms] = multcompare(STATS);
 
 fprintf(1,'********************\n');
@@ -298,10 +278,11 @@ fprintf(1,'Pure tone magnitudes\n');
 for i=1:size(c,1)
     fprintf(1,'%s vs %s: %.2f, [%.2f, %.2f], %.4f\n', anat_labels{c(i,1)}, anat_labels{c(i,2)}, c(i,4) ,c(i,3), c(i,5), c(i,6));
 end
+pt_c = c;
 
 %%
 % Stats for speech
-[P,ANOVATAB,STATS] = kruskalwallis(all_sp_magnitudes, all_groups);
+[P,ANOVATAB,STATS] = kruskalwallis(all_sp_mag, all_groups);
 [c,m,h,nms] = multcompare(STATS);
 
 fprintf(1,'********************\n');
@@ -309,11 +290,42 @@ fprintf(1,'Speech magnitudes\n');
 for i=1:size(c,1)
     fprintf(1,'%s vs %s: %.2f, [%.2f, %.2f], %.4f\n', anat_labels{c(i,1)}, anat_labels{c(i,2)}, c(i,4) ,c(i,3), c(i,5), c(i,6));
 end
+sp_c = c;
 
+%% Print Table 3
+
+for i=1:size(c,1)
+    
+    fprintf(1,'%s vs %s\t %.2f, [%.2f, %.2f]\t %.4f', ...
+        anat_labels{pt_c(i,1)}, anat_labels{pt_c(i,2)}, pt_c(i,4) ,pt_c(i,3), pt_c(i,5), pt_c(i,6));
+    if pt_c(i,6)<0.05
+        fprintf(1,'*');
+        if pt_c(i,6)<0.01
+            fprintf(1,'*')
+            if pt_c(i,6)<0.001
+                fprintf(1,'*')
+            end
+        end
+    end
+    fprintf(1,'\t');
+    fprintf(1,'%.2f, [%.2f, %.2f]\t %.4f', ...
+        sp_c(i,4) ,sp_c(i,3), sp_c(i,5), sp_c(i,6));
+    if sp_c(i,6)<0.05
+        fprintf(1,'*');
+        if sp_c(i,6)<0.01
+            fprintf(1,'*')
+            if sp_c(i,6)<0.001
+                fprintf(1,'*')
+            end
+        end
+    end
+    fprintf(1,'\n');
+end
 %%
 % percentages of each area with significant response to tones
-anat_labels = {'PT','HG','PP','pSTG','mSTG'};
-for i=1:5
+anat_labels = include7AreasName;
+fprintf(1,'****************\n');
+for i=1:7
     perc=sum(all_pvals_tones(all_groups==i)<0.05/length(all_pvals_tones))/length(find(all_groups==i)); % Bonferroni corrected
     fprintf(1,'%s : %2.2f percent significant response to tones \n', anat_labels{i}, perc*100);
 end
@@ -321,8 +333,8 @@ end
 
 %%
 % percentages of each area with significant response to speech
-anat_labels = {'PT','HG','PP','pSTG','mSTG'};
-for i=1:5
+fprintf(1,'****************\n');
+for i=1:7
     perc=sum(all_pvals_speech(all_groups==i)<0.05/length(all_pvals_speech))/length(find(all_groups==i)); % Bonferroni corrected
     fprintf(1,'%s : %2.2f percent significant response to speech\n', anat_labels{i}, perc*100);
 end
@@ -341,6 +353,7 @@ bad_sp_good_t=length(bad_speech_good_tone_inds)/length(all_pvals_speech)*100;
 good_sp_good_t=length(good_speech_good_tone_inds)/length(all_pvals_speech)*100;
 good_sp_bad_t=length(good_speech_bad_tone_inds)/length(all_pvals_speech)*100;
 
+fprintf(1,'********\n');
 fprintf(1,'Not significant for speech, significant for tones: %3.1f percent\n', bad_sp_good_t);
 fprintf(1,'Significant for speech, significant for tones: %3.1f percent\n', good_sp_good_t);
 fprintf(1,'Significant for speech, not significant for tones: %3.1f percent\n', good_sp_bad_t);
@@ -351,10 +364,11 @@ fprintf(1,'Significant for speech, not significant for tones: %3.1f percent\n', 
 all_rf_mask = all_rf_struct;
 sig_bw = [];
 all_sig_grps = [];
-group_names = {'PT','HG','PP','pSTG','mSTG'};
+%group_names = {'PT','HG','PP','pSTG','mSTG'};
+group_names = include7AreasName;
 nrows = 11;
 ncols = 13;
-for grp=1:5
+for grp=1:length(group_names)
     plotnum = 1;
     figure;
     group_elecs = find(all_groups==grp);
@@ -443,16 +457,16 @@ end
 % percentage of good RFs, and percentage of multi vs single peaked RFs
 perc_good_rf = zeros(length(anat_labels),1);
 
-for i=1:5
+for i=1:7
     perc_good_rf(i) = length(find(all_tc_struct(i).pvals_rf_in_out<0.05/length(all_groups)))/length(all_tc_struct(i).pvals_rf_in_out);
 end
 
 figure; bar(perc_good_rf);
-set(gca,'xtick',[1:5],'xticklabels',anat_labels);
+set(gca,'xtick',[1:7],'xticklabels',anat_labels);
 
-single_multi_peak = zeros(5,2);
+single_multi_peak = zeros(7,2);
 figure;
-for i=1:5
+for i=1:7
     single_multi_peak(i,1) = length(find(all_tc_struct(i).peaks(find(all_tc_struct(i).pvals_rf_in_out<0.05/length(all_groups)))==1))/length(all_tc_struct(i).pvals_rf_in_out);
     single_multi_peak(i,2) = length(find(all_tc_struct(i).peaks(find(all_tc_struct(i).pvals_rf_in_out<0.05/length(all_groups)))>=2))/length(all_tc_struct(i).pvals_rf_in_out);
     %single_multi_peak(i,3) = length(find(all_tc_struct(i).peaks(find(all_tc_struct(i).pvals_rf_in_out<0.05/length(all_groups)))>=3))/length(all_tc_struct(i).pvals_rf_in_out);
@@ -461,9 +475,8 @@ end
 bh=bar(single_multi_peak,'stacked');
 colorSet = [];
 for i = 1:2
-    myColors = [pt_color; hg_color; pp_color; pstg_color; mstg_color];
     bh(i).FaceColor = 'flat';
-    bh(i).CData = myColors;
+    bh(i).CData = area7Cols;
     bh(i).EdgeColor = 'none';
     if i==1
         bh(i).FaceAlpha = 1;
@@ -471,11 +484,11 @@ for i = 1:2
         bh(i).FaceAlpha = 0.5;
     end
 end
-set(gca,'xtick',[1:5],'xticklabels',anat_labels);
+set(gca,'xtick',[1:7],'xticklabels',anat_labels);
 set(gca,'ytick',[0:0.25:1],'yticklabels',[0:25:100]);
 legend('single peak','multi-peak');
 ylabel('% significant RF sites');
-%print_quality_fig(gcf,'Figures/Fig2G.eps',10,4,4,'inches','epsc');
+print_quality_fig(gcf,sprintf('%s/Fig3G.eps',figDir),10,3,3,'inches','epsc');
 
 for i=1:5
     fprintf(1,'%s, total: %.2f, single peak: %.2f, multi: %.2f percent\n', ...
@@ -488,7 +501,7 @@ end
 peak_counts = [];
 anat_mat = [];
 %[all_tc_struct(4).peaks; all_tc_struct(4).peaks;
-for i=1:5
+for i=1:7
     all_peaks = all_tc_struct(i).peaks;
     non_sig_peaks = find(all_tc_struct(i).pvals_rf_in_out>=0.05/length(all_groups));
     all_peaks(non_sig_peaks) = 0;
@@ -511,7 +524,7 @@ fprintf(1,'chi2 = %.1f, df=%d, n=%d electrodes, p=%2.2g\n', chi2, df, sum(tbl(:)
 all_rf_strf_corrs = [];
 all_rf_strf_pvals = [];
 grp = [];
-for g=1:5
+for g=1:7
     [rho,p]=corr(all_tc_struct(g).tc, all_tc_struct(g).tc_speech, 'tail','right');
     rf_strf_corrs = diag(rho);
     rf_strf_pvals = diag(p);
@@ -523,14 +536,12 @@ end
 
 good_elecs = union(find(all_pvals_tones<(0.05/length(all_pvals_tones))),find(all_pvals_speech<0.05/length(all_pvals_speech)));
 fh=figure;
-boxplot(all_rf_strf_corrs(good_elecs), grp(good_elecs),'colors', [pt_color;hg_color; pp_color; ...
-    pstg_color; mstg_color],'symbol','');
+boxplot(all_rf_strf_corrs(good_elecs), grp(good_elecs),'colors', area7Cols,'symbol','');
 
 h = findobj(gca,'Tag','Box');
-cs = [pt_color; hg_color; pp_color; ...
-    pstg_color; mstg_color];
+
 for j=1:length(h)
-    patch(get(h(j),'XData'),get(h(j),'YData'),cs(length(h)-(j-1),:),'FaceAlpha',0.5);
+    patch(get(h(j),'XData'),get(h(j),'YData'),area7Cols(length(h)-(j-1),:),'FaceAlpha',0.5);
 end
 
 tags = {'Lower Whisker','Upper Whisker','Lower Adjacent Value',...
@@ -543,8 +554,8 @@ for tt=1:length(tags)
     end
 end
 hold all;
-plot([0.5 5.5],[0 0], 'k--');
-set(gca,'xtick',[1:5],'xticklabel',{'PT','HG','PP','pSTG','mSTG'});
+plot([0.5 7.5],[0 0], 'k--');
+set(gca,'xtick',[1:7],'xticklabel',anat_labels);
 ylabel('r(speech, pure tone)');
 
 [P,ANOVATAB,STATS] = kruskalwallis(all_rf_strf_corrs(good_elecs), grp(good_elecs))
@@ -572,7 +583,7 @@ for i=1:size(c,1)
     end
 end
 axis tight;
-%print_quality_fig(gcf,'Figure2H.eps',8,3,3,'inches','epsc');
+print_quality_fig(gcf,sprintf('%s/Figure3H.eps',figDir),8,3,3,'inches','epsc');
 %%
 pct_gt_zero = zeros(5,1);
 for g=1:5

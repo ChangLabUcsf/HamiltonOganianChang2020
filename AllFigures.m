@@ -35,11 +35,11 @@ Figure2DE;
 
 %%
 Figure3A;
-Figure3BFGH_S2_S3_7areas_MID;
+Figure3BFGH_S3_S4_7areas_MID;
 Figure3CDE_MID;
 
 %%
-Figure4
+Figure4_and_S5
 
 %%
 Figure5_and_S6;
@@ -53,3 +53,6 @@ Figure7_and_S5;
 
 %%
 FigureS1
+
+%%
+FigureS2D

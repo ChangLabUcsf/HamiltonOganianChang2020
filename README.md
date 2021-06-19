@@ -5,3 +5,7 @@ To run the code, first request the data from Edward Chang (edward.chang@ucsf.edu
 
 To reproduce all figures, run:
 * `AllFigures.m`
+
+## Other required third party code:
+* Dalca et al. 2011 [Bezier Curves](https://github.com/adalca/bezier)
+* Sharpee et al. [Maximally Informative Dimensions](https://github.com/sharpee/mid)

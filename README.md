@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4994666.svg)](https://doi.org/10.5281/zenodo.4994666)
+
 # HamiltonOganianChang2020
 Code to accompany Hamilton, Oganian, Hall, and Chang "Parallel and distributed encoding of speech across human auditory cortex".
 

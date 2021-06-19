@@ -50,6 +50,16 @@ for i = 1:length(subjects)
 end
 fclose('all');
 
+%% 
+plotnum = [7 1 2 9 4 5 8];
+lat_sort_by_area = {};
+for a=1:7
+	derp = diff(resp_by_area{a},1,2);
+    lat = argmax(derp');
+    [lat_sorted, lat_idx] = sort(lat);
+    lat_sort_by_area{a} = [lat_idx' lat_sorted'];
+end
+
 %%  Figure 2A
 plotnum2 = [3 1 4 5 2 6 7]+1;
 

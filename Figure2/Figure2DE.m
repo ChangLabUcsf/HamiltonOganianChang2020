@@ -40,13 +40,13 @@ for i = 1:length(subjects)
                             resp2 = all_resp(elecs2(e2),:);
                             [acor, lag] = xcorr(resp1,resp2, 100,'coeff');
                             
-                            %if max(acor)>0.1
-                            maxlags = [maxlags; lag(argmax(acor)) max(acor) area1 area2 i];
-                            %end
-                            %if min(acor)<-0.1
-                            [mincor, mincorlag] = min(acor);
-                            minlags = [minlags; lag(mincorlag) mincor area1 area2 i];
-                            %end
+                            if max(acor)>0.1
+                                maxlags = [maxlags; lag(argmax(acor)) max(acor) area1 area2 i];
+                            end
+                            if min(acor)<-0.1
+                                [mincor, mincorlag] = min(acor);
+                                minlags = [minlags; lag(mincorlag) mincor area1 area2 i];
+                            end
                         end
                     end
                 end
@@ -150,18 +150,15 @@ lmax = round(max(abs(sortedlag)));
 cmap = flipud(cbrewer('div','RdBu',lmax*2+1));
 %cmap = flipud(cbrewer('seq','YlOrRd',lmax+1));
 area_coords = [3 1;
-    2 1;
+    2 1.2;
     1 1;
     0 1;
     2.5 0;
     1.4 0;
     0.3 0;]
 figure;
-for i=1:7
-    scatter(area_coords(i,1), area_coords(i,2), 100, 'k','filled'); hold all;
-    text(area_coords(i,1)+0.1, area_coords(i,2)-0.1, include7AreasName{i});
-end
-axis([-0.5 3.5 -0.5 1.5]);
+hold on;
+
 
 lflag=0;
 for grp1=1:7
@@ -190,15 +187,33 @@ for grp1=1:7
             
             if p<0.05
                 fprintf(1,' SIGNIF. %s to %s\n', include7AreasName{grp1}, include7AreasName{grp2});
-                dp = area_coords(grp2,:) - area_coords(grp1,:);
-                quiver(area_coords(grp1,1), area_coords(grp1,2), ...
-                    dp(1), dp(2), ...
-                    'color', cmap(leadlag+lmax+1,:), ...
-                    'linewidth', acor_mean*20);
-                plot([area_coords(grp1,1) area_coords(grp2,1)], ...
-                    [area_coords(grp1,2) area_coords(grp2,2)], ...
-                    'color', cmap(leadlag+lmax+1,:), ...
-                    'linewidth', acor_mean*20);
+                %                 dp = area_coords(grp2,:) - area_coords(grp1,:);
+                %                 quiver(area_coords(grp1,1), area_coords(grp1,2), ...
+                %                     dp(1), dp(2), ...
+                %                     'color', cmap(leadlag+lmax+1,:), ...
+                %                     'linewidth', acor_mean*20);
+                
+                if (grp1==1 && grp2==3)
+                    bez = bezier.eval([area_coords(1,:); area_coords(2,1) area_coords(2,2)+0.5; area_coords(3,:)])
+                    plot(bez(:,1), bez(:,2), ...
+                        'color', cmap(leadlag+lmax+1,:), ...
+                        'linewidth', acor_mean*20);
+                elseif (grp1==1 && grp2==4)
+                    bez = bezier.eval([area_coords(1,:); area_coords(2,1)-0.5 area_coords(2,2)+0.5; area_coords(4,:)])
+                    plot(bez(:,1), bez(:,2), ...
+                        'color', cmap(leadlag+lmax+1,:), ...
+                        'linewidth', acor_mean*20);
+                elseif (grp1==5 && grp2==7)
+                    bez = bezier.eval([area_coords(5,:); area_coords(6,1) area_coords(6,2)-0.5; area_coords(7,:)])
+                    plot(bez(:,1), bez(:,2), ...
+                        'color', cmap(leadlag+lmax+1,:), ...
+                        'linewidth', acor_mean*20);
+                else
+                    plot([area_coords(grp1,1) area_coords(grp2,1)], ...
+                        [area_coords(grp1,2) area_coords(grp2,2)], ...
+                        'color', cmap(leadlag+lmax+1,:), ...
+                        'linewidth', acor_mean*20);
+                end
                 if lflag
                     grp1 = grp1_tmp;
                     grp2 = grp2_tmp;
@@ -210,9 +225,14 @@ for grp1=1:7
         end
     end
 end
+for i=1:7
+    scatter(area_coords(i,1), area_coords(i,2), 100, 'k','filled'); hold all;
+    text(area_coords(i,1)+0.1, area_coords(i,2)-0.1, include7AreasName{i});
+end
+axis([-0.5 3.5 -0.5 1.5]);
 axis off;
 colormap(cmap);
 cb = colorbar;
 set(cb, 'ytick', linspace(0, 0.5, 7), 'yticklabel',linspace(-0.06, 0, 7),'ylim',[0 0.5])
-%print_quality_fig(gcf,'figures/Figure2E.eps',8,4,3,'inches','epsc');
+print_quality_fig(gcf,'figures/Figure2E.eps',8,4,3,'inches','epsc');
 
